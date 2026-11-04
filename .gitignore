@@ -1,0 +1,22 @@
+# Vendor
+/vendor/*
+!/vendor/.keep
+
+# Logs
+/log/*
+!/log/.keep
+
+# Temporary files
+/tmp/*
+!/tmp/.keep
+
+# Vendor
+/vendor/*
+!/vendor/.keep
+
+# Secrets
+.env
+.env.*
+!.env.example
+/config/master.key
+/config/credentials/*.key

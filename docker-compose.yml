@@ -1,0 +1,38 @@
+
+services:
+  db:
+    image: postgres:16
+    container_name: multi_tenant_db
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: ${DATABASE_PASSWORD:?Defina DATABASE_PASSWORD no .env}
+      POSTGRES_DB: multi_tenant_development
+    ports:
+      - "5432:5432"
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 5s
+      retries: 5
+
+  web:
+    build: .
+    container_name: multi_tenant_api
+    command: bash -c "rm -f tmp/pids/server.pid && bundle exec rails server -b 0.0.0.0"
+    volumes:
+      - .:/app
+    ports:
+      - "3000:3000"
+    environment:
+      DATABASE_HOST: db
+      DATABASE_USER: postgres
+      DATABASE_PASSWORD: ${DATABASE_PASSWORD:?Defina DATABASE_PASSWORD no .env}
+      JWT_SECRET_KEY: ${JWT_SECRET_KEY:?Defina JWT_SECRET_KEY no .env}
+    depends_on:
+      db:
+        condition: service_healthy
+
+volumes:
+  postgres_data:

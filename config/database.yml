@@ -1,0 +1,21 @@
+
+default: &default
+  adapter: postgresql
+  encoding: unicode
+  host: <%= ENV.fetch("DATABASE_HOST", "db") %>
+  username: <%= ENV.fetch("DATABASE_USER", "postgres") %>
+  password: <%= ENV.fetch("DATABASE_PASSWORD", "postgres") %>
+  port: 5432
+  pool: <%= ENV.fetch("RAILS_MAX_THREADS") { 5 } %>
+
+development:
+  <<: *default
+  database: multi_tenant_development
+
+test:
+  <<: *default
+  database: multi_tenant_test
+
+production:
+  <<: *default
+  database: multi_tenant_production
